@@ -22,14 +22,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        shell: bash
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            echo "package-lock.json não encontrado no checkout; usando npm install para validar a branch."
-            npm install
-          fi
+        run: npm install
 
       - name: Lint
         run: npm run lint
