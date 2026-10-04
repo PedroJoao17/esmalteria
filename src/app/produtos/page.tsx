@@ -1,2 +1,8 @@
-import { Shell } from "@/components/shell"; import { ProductCard } from "@/components/catalog-card"; import { products } from "@/data/catalog";
-export default function Products(){return <Shell><section className="page-hero"><span className="kicker">Sua rotina de autocuidado</span><h1>Produtos</h1><p>Perfumes, sabonetes e hidratantes selecionados para você.</p></section><section className="section compact"><div className="filter-row"><button className="active">Todos</button><button>Perfumaria</button><button>Corpo e banho</button></div><div className="product-grid large">{[...products,...products].map((item,i)=><ProductCard key={`${item.name}-${i}`} item={item}/>)}</div></section></Shell>}
+import { ProductCatalog } from "@/components/catalog-browser";
+import { Shell } from "@/components/shell";
+import { catalogGateway } from "@/services/app-service";
+
+export default async function Products() {
+  const products = await catalogGateway.listProducts();
+  return <Shell><section className="page-hero"><span className="kicker">Sua rotina de autocuidado</span><h1>Produtos</h1><p>Perfumes, sabonetes e hidratantes em catálogo demonstrativo. No MVP, o interesse é encaminhado pelo WhatsApp.</p></section><section className="section compact"><ProductCatalog items={products} /></section></Shell>;
+}

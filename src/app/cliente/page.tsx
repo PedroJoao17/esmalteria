@@ -1,2 +1,6 @@
-import Link from "next/link"; import { Shell } from "@/components/shell"; import { Calendar, Sparkle, User } from "@/components/icons";
-export default function Client(){return <Shell><section className="dashboard"><div className="welcome"><span className="avatar"><User size={28}/></span><div><span>Olá, cliente!</span><h1>Seu espaço de beleza</h1></div></div><div className="appointment"><div><span className="icon-box"><Calendar/></span><div><small>Próximo agendamento</small><h2>Manicure clássica</h2><p>Sábado, 21 de setembro • 14h</p></div></div><span className="status">Confirmado</span></div><div className="dash-grid"><article><span className="icon-box"><Calendar/></span><h2>Meus agendamentos</h2><p>Acompanhe seus próximos horários e consulte seu histórico.</p><Link href="/servicos">Novo agendamento</Link></article><article><span className="icon-box"><Sparkle/></span><h2>Clube de vantagens</h2><p>Você tem 4 visitas. Falta só uma para ganhar um cuidado especial.</p><div className="progress"><i/></div><small>4 de 5 visitas</small></article></div><Link className="admin-link" href="/admin">Acessar demonstração da área administrativa →</Link></section></Shell>}
+import { ClientDashboard } from "@/components/client-dashboard";
+import { Shell } from "@/components/shell";
+
+export default function ClientPage() {
+  return <Shell><ClientDashboard /></Shell>;
+}

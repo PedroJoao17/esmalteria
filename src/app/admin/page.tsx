@@ -1,2 +1,8 @@
-import { Shell } from "@/components/shell"; import { Bag, Calendar, User } from "@/components/icons";
-export default function Admin(){return <Shell><section className="dashboard"><div className="welcome"><span className="avatar dark"><User size={28}/></span><div><span>Painel administrativo</span><h1>Visão geral</h1></div></div><div className="metric-grid"><article><Calendar/><small>Agendamentos hoje</small><strong>8</strong><span>2 aguardando confirmação</span></article><article><User/><small>Clientes ativos</small><strong>126</strong><span>+12 neste mês</span></article><article><Bag/><small>Produtos com estoque baixo</small><strong>3</strong><span>Revisar reposição</span></article></div><div className="admin-table"><div className="table-title"><h2>Agenda de hoje</h2><button>Adicionar horário</button></div>{[["09:00","Marina S.","Manicure clássica"],["10:30","Ana P.","Pedicure spa"],["14:00","Carla M.","Alongamento em gel"]].map(row=><div className="table-row" key={row[0]}><strong>{row[0]}</strong><span>{row[1]}</span><span>{row[2]}</span><i>Confirmado</i></div>)}</div></section></Shell>}
+import { AdminDashboard } from "@/components/admin-dashboard";
+import { Shell } from "@/components/shell";
+import { catalogGateway } from "@/services/app-service";
+
+export default async function AdminPage() {
+  const [services, products] = await Promise.all([catalogGateway.listServices(), catalogGateway.listProducts()]);
+  return <Shell><AdminDashboard services={services} products={products} /></Shell>;
+}

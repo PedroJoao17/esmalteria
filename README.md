@@ -1,45 +1,96 @@
 # Esmalteria
 
-MVP frontend mobile-first para uma esmalteria que oferece serviços de manicure, pedicure, alongamentos e também comercializa perfumes, sabonetes e hidratantes.
+MVP frontend mobile-first para uma esmalteria com serviços de manicure/pedicure, agendamento e catálogo de perfumes, sabonetes e hidratantes.
 
-## Status atual
+## Estado do frontend
 
-A fundação visual do projeto já foi entregue. O repositório possui páginas demonstrativas, navegação mobile e dados mockados, mas o MVP funcional ainda está em desenvolvimento.
+A `development` contém o MVP funcional demonstrável:
 
-Já estão disponíveis:
+- landing page e identidade visual responsiva;
+- catálogo de serviços e produtos com busca, filtros, estados vazios e detalhes;
+- agendamento simulado com serviço, data, horário, revisão e confirmação;
+- remarcação e cancelamento;
+- login único para cliente e administradora;
+- cadastro de cliente com preenchimento de endereço por CEP;
+- área da cliente com perfil, próximos atendimentos e histórico;
+- painel administrativo com agenda, clientes, indicadores e manutenção simulada do catálogo;
+- catálogo de produtos com CTA de interesse via WhatsApp;
+- persistência local dos fluxos demonstrativos;
+- gateways/adapters para substituir mocks por API futuramente;
+- CI com lint e build.
 
-- Landing page com apresentação do negócio, serviços, produtos e chamadas para agendamento.
-- Catálogo demonstrativo de serviços com descrição, preço e duração.
-- Catálogo demonstrativo de perfumes, sabonetes e hidratantes.
-- Área demonstrativa da cliente.
-- Painel demonstrativo da administradora.
-- Navegação responsiva com header e menu inferior.
-- Identidade visual em tons de rosa.
-- Configuração inicial para Netlify.
-- Base em Next.js, React e TypeScript.
-- Validação inicial de lint e build.
+## Decisões do MVP
 
-## Tecnologias
+### Autenticação
 
-- Next.js 16.
-- React 19.
-- TypeScript.
-- CSS responsivo com tokens de design próprios.
-- Netlify com `@netlify/plugin-nextjs`.
-- Backend futuro em Java Spring Boot.
+Existe **uma única tela de login**. O papel retornado pela autenticação define o destino:
+
+- `client` → `/cliente`;
+- `admin` → `/admin`.
+
+No modo mock há contas demonstrativas na própria tela. Em produção, o papel deverá vir da API/token, não de uma segunda página de login.
+
+### Produtos
+
+O MVP usa **catálogo + WhatsApp**. Carrinho, pedido interno e pagamento online ficam fora do escopo atual.
+
+### Recursos pós-MVP
+
+- clube de vantagens;
+- avaliações públicas;
+- pagamentos online;
+- notificações;
+- relatórios avançados.
+
+Os indicadores administrativos básicos permanecem para demonstrar a gestão.
+
+## Stack
+
+- Next.js 16;
+- React 19;
+- TypeScript;
+- CSS mobile-first;
+- ViaCEP para preenchimento de endereço;
+- Netlify preparado por `netlify.toml`;
+- API Java Spring prevista para a fase posterior.
 
 ## Executar localmente
 
-Para um clone novo ou quando o `node_modules` não estiver instalado, utilize:
-
 ```bash
-npm ci
+git switch development
+git pull origin development
+npm install
 npm run dev
 ```
 
 Acesse `http://localhost:3000`.
 
-> O comando `next` depende das dependências do projeto instaladas localmente. Se `npm run dev` retornar que `next` não foi encontrado, execute `npm ci` antes de iniciar a aplicação.
+> Por enquanto use `npm install`. O lockfile atual apresentou incompatibilidade com `npm ci` no runner da CI.
+
+## Contas demonstrativas
+
+Cliente:
+
+```text
+cliente@esmalteria.demo
+123456
+```
+
+Administradora:
+
+```text
+admin@esmalteria.demo
+123456
+```
+
+## Variáveis de ambiente
+
+Copie `.env.example` para `.env.local` quando quiser configurar integrações:
+
+- `NEXT_PUBLIC_DATA_SOURCE=mock` mantém o frontend independente;
+- `NEXT_PUBLIC_DATA_SOURCE=api` usa a API configurada;
+- `NEXT_PUBLIC_API_URL` aponta para o backend futuro;
+- `NEXT_PUBLIC_WHATSAPP_NUMBER` define o número comercial no formato internacional.
 
 ## Validar
 
@@ -48,65 +99,16 @@ npm run lint
 npm run build
 ```
 
-## Roadmap do MVP
+## Organização técnica
 
-O desenvolvimento prioriza a conclusão do frontend demonstrável antes da integração com Java Spring.
+- `src/data`: mocks.
+- `src/types`: contratos do domínio.
+- `src/services`: gateways de dados, autenticação, CEP e integração futura.
+- `src/lib/app-storage.ts`: adapter de persistência local do protótipo.
+- `src/components`: UI e fluxos funcionais.
+- `docs/frontend-architecture.md`: decisões de arquitetura do frontend.
+- `docs/api-contract.md`: contrato esperado para a integração futura.
 
-| Sprint | Objetivo | Entregas principais |
-| --- | --- | --- |
-| 1 — Requisitos e identidade | Consolidar a apresentação do negócio | Marca, serviços, produtos, preços, duração, contatos, fotos, horários e validação dos elementos fictícios |
-| 2 — Catálogos funcionais | Permitir explorar serviços e produtos | Busca, filtros, detalhes, disponibilidade e estados vazios |
-| 3 — Agendamento simulado | Demonstrar o fluxo completo de reserva | Serviço, data, horário, revisão, confirmação e estado pós-agendamento |
-| 4 — Área da cliente | Demonstrar a experiência da cliente | Login/cadastro simulados, perfil, próximos atendimentos, histórico, cancelamento e remarcação |
-| 5 — Administração | Demonstrar a gestão do negócio | Agenda, clientes, serviços, produtos, disponibilidade e indicadores |
-| 6 — Refinamento e apresentação | Entregar o MVP frontend | Revisão mobile, acessibilidade, feedbacks, validações, navegação e publicação no Netlify |
-| 7 — Preparação para API | Facilitar a integração posterior | Contratos de dados, camada de serviços e adapters para substituir mocks |
-| Fase seguinte — Backend | Tornar o sistema operacional | Java Spring, banco, autenticação, permissões, persistência e regras reais |
+## Deploy
 
-## Decisão pendente: venda de produtos
-
-Antes de implementar o fluxo funcional dos produtos, deve ser definido qual modelo fará parte do MVP:
-
-1. Catálogo com contato pelo WhatsApp.
-2. Reserva para retirada.
-3. Compra dentro do sistema.
-
-Essa decisão define se carrinho, pedidos e pagamento entram no escopo.
-
-## Escopo pós-MVP ou sujeito a validação
-
-Os seguintes elementos foram incluídos como demonstração visual ou permanecem dependentes de validação com a cliente:
-
-- Clube de vantagens/fidelidade.
-- Avaliações e depoimentos.
-- Indicadores administrativos.
-- Pagamentos online.
-- Notificações.
-- Relatórios avançados.
-
-Eles não devem ser tratados como funcionalidades concluídas até serem aprovados e implementados.
-
-## Issues e organização do trabalho
-
-O backlog funcional está organizado em issues do GitHub com critérios de aceite.
-
-- Sprint 1: issues #1 a #3.
-- Sprint 2: issues #4 a #6.
-- Sprint 3: issues #7 a #9.
-- Sprint 4: issues #10 a #12.
-- Sprint 5: issues #13 a #16.
-- Sprint 6: issues #17 e #18.
-- Sprint 7: issues #19 e #20.
-- Backend: issue #23.
-
-As issues #21 e #22 foram geradas como duplicatas durante a organização inicial do backlog e estão fechadas.
-
-O Trello permanece como visão de acompanhamento do fluxo de trabalho. O GitHub concentra backlog técnico, critérios de aceite, código, documentação, commits e evolução do projeto.
-
-## Estratégia de integração
-
-Até a Sprint 6, a interface deverá continuar funcional com mocks. Na Sprint 7, os componentes serão desacoplados dessas fontes por meio de contratos, camada de serviços e adapters. A integração real com Java Spring ocorrerá somente na fase seguinte.
-
-## Publicação no Netlify
-
-O repositório já inclui `netlify.toml`. A publicação ainda precisa ser confirmada como parte da Sprint 6. Após o deploy definitivo, a URL pública deverá ser registrada nesta documentação.
+O projeto permanece configurado para Netlify. O código e o build ficam prontos para publicação; a criação/associação do site Netlify é uma ação externa ao repositório.

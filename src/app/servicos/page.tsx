@@ -1,2 +1,8 @@
-import { Shell } from "@/components/shell"; import { ServiceCard } from "@/components/catalog-card"; import { services } from "@/data/catalog";
-export default function Services(){return <Shell><section className="page-hero"><span className="kicker">Escolha seu cuidado</span><h1>Serviços</h1><p>Encontre o ritual ideal para você. Os valores e horários abaixo são demonstrativos.</p></section><section className="section compact"><div className="filter-row"><button className="active">Todos</button><button>Mãos</button><button>Pés</button><button>Alongamentos</button></div><div className="service-grid">{services.map(item=><ServiceCard key={item.name} item={item}/>)}</div></section></Shell>}
+import { ServiceCatalog } from "@/components/catalog-browser";
+import { Shell } from "@/components/shell";
+import { catalogGateway } from "@/services/app-service";
+
+export default async function Services() {
+  const services = await catalogGateway.listServices();
+  return <Shell><section className="page-hero"><span className="kicker">Escolha seu cuidado</span><h1>Serviços</h1><p>Busque, filtre e consulte detalhes antes de reservar. Os valores permanecem demonstrativos até a validação comercial.</p></section><section className="section compact"><ServiceCatalog items={services} /></section></Shell>;
+}
